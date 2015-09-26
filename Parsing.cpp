@@ -7,38 +7,40 @@
 //
 
 #include "Parsing.hpp"
+#include "functions.hpp"
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <sstream>
-using namespace std;
 
+std::string TextLine::getLabel(void)
+{
+    return _line.substr(0,_line.find(':'));
+}
 
-int testReadline(void) {
-    std::cout << "Hello, World! Holaaa \n";
-    string line;
-    ifstream myfile ("test_text.txt");
-    TextLine cur_line;
-    while ( getline (myfile,line) )  // Lis tout le fichier
+std::string TextLine::getText(void)
+{
+    return _line.substr(_line.find(':')+1,_line.length());
+}
+
+void TextLine::readLine(void)
+{
+    std::string text = getText();
+    if(text.find('{') != std::string::npos)
     {
-        std::cout << line <<" the end\n";
-        //stringstream iss(line); // Converssions ou je sais pas trop quoi
-        cur_line.setLine(line); // NECESSAIRE POUR CONNAITRE LA LIGNE
-        //cur_line.printLine();
-        cur_line.readLine();
-        /*
-         string label;
-         getline(iss,label,':'); // Trouver le label qui se situe juste avant le ':'
-         if (iss.good()) // Le texte continue sur la ligne courante
-         {
-         string rest;
-         getline(iss, rest);
-         cout << "Apres label:" << rest << endl;
-         }
-         cout << "Label:" << label << '\n';
-         */
+        size_t ind_start = text.find('{');
+        std::cout << text.substr(0,text.find('{')) << std::endl;
+        size_t ind_end = text.find('}');
+        std::string choices = text.substr(ind_start+1,ind_end-ind_start-1);
+        printChoices(choices);
+        std::cout << text.substr(ind_end+1,text.length());
+        int reponse;
+        std::cout << std::endl << "Réponse : ";
+        std::cin >> reponse;
+            while(reponse>countCharacter(choices,"|"))
+            {
+                std::cout << "Veuillez donner une autre valeur : ";
+                std::cin >> reponse;
+            }
+        std::cout << reponse;
+        std::cout << "Label d'arrivé : " << findNextLabelDirection(choices, reponse);
     }
-    myfile.close();
-    
-    return 1;
 }
