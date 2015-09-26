@@ -1,0 +1,3 @@
+lab1:Bonjour comment vas tu?
+lab2:Je vais très bien merci
+lab3:On recommence {oui@lab1|non} ou pas?
